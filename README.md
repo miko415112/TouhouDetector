@@ -1,0 +1,2 @@
+# TouhouDetector
+Unfinished project
