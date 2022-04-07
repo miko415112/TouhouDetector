@@ -41,11 +41,9 @@ public class MainActivity extends AppCompatActivity {
     ImageButton video_button;
     ImageButton find_button;
     ImageButton camera_button;
-    Context myContext = this;
     YOLOv4Tiny detector;
 
-
-
+    Context myContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +66,13 @@ public class MainActivity extends AppCompatActivity {
         photo_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage();
+
+                //選取檔案 並且位置在相簿
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                //篩選檔案類型為圖片
+                i.setType("image/*");
+                startActivityForResult(i,1);
+
             }
         });
 
@@ -76,7 +80,12 @@ public class MainActivity extends AppCompatActivity {
         find_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawResult();
+                //imageView得到的Bitmap是Mutable
+                Bitmap mBitmap = ((BitmapDrawable)mImageView.getDrawable()).getBitmap();
+                Bitmap mutableBitmap = mBitmap.copy(Bitmap.Config.ARGB_8888, true);
+                myUtils.drawResult(mutableBitmap);
+                mImageView.setImageBitmap(mutableBitmap);
+
             }
         });
 
@@ -84,54 +93,23 @@ public class MainActivity extends AppCompatActivity {
         video_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectVideo();
+
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                //篩選檔案類型為影片
+                i.setType("video/*");
+                startActivityForResult(i,2);
+
             }
         });
 
-
-    }
-
-
-
-    private void drawResult()
-    {
-        Bitmap mImage = ((BitmapDrawable)mImageView.getDrawable()).getBitmap();
-        List<YOLOv4Tiny.Result> results = new ArrayList<YOLOv4Tiny.Result>();
-        results.addAll(detector.detect(mImage));
-
-        float scale = mImage.getWidth()/100;
-
-        Paint bboxPaint = new Paint();
-        bboxPaint.setStyle(Paint.Style.STROKE);
-        bboxPaint.setColor(Color.parseColor("#00FCB2"));
-        bboxPaint.setStrokeWidth(2*scale);
-
-        Paint textPaint = new Paint();
-        textPaint.setColor(Color.parseColor("#0B3169"));
-        textPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        textPaint.setTextAlign(Paint.Align.CENTER);;
-        textPaint.setTextSize(8*scale);
-
-        Bitmap mutableBitmap = mImage.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas canvas = new Canvas(mutableBitmap);
-
-
-        for(int i=0;i<results.size();i++) {
-            String s = results.get(i).name+String.format("%.02f",results.get(i).confidence);
-            float x = (results.get(i).location.left+results.get(i).location.right)/2;
-            float y = results.get(i).location.top+8*scale;
-
-            canvas.drawRect(results.get(i).location,bboxPaint);
-            canvas.drawText(s,x,y,textPaint);
-        }
-        mImageView.setImageBitmap(mutableBitmap);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
+        camera_button = findViewById(R.id.imageButton_Camera);
+        camera_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(myContext, CameraActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
 
@@ -142,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i =0;i<grantResults.length;i++) {
             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(MainActivity.this, "Some Permissions Denied,May Not Funtion Well", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Some Permissions are Denied,May Not Funtion Well", Toast.LENGTH_LONG).show();
                 return;
             }
         }
@@ -165,22 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void selectImage(){
-        //選取檔案 並且位置在相簿
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        //篩選檔案類型為圖片
-        i.setType("image/*");
-        startActivityForResult(i,1);
-    }
-
-    private void selectVideo(){
-
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        //篩選檔案類型為影片
-        i.setType("video/*");
-        startActivityForResult(i,2);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -191,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
                 mImageView.setImageURI(uri);
             }
             else if (requestCode==2){
-                mySurfaceView.VideoUri = data.getData();
                 Intent i = new Intent(this, VideoActivity.class);
+                i.putExtra("VideoUri",data.getData().toString());
                 startActivity(i);
             }
     }

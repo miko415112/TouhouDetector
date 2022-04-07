@@ -2,7 +2,12 @@ package com.example.touhoudetector;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
 import android.util.Log;
 
@@ -33,7 +38,7 @@ public class YOLOv4Tiny {
     private float Confidence_Threshold = 0.5f;
     private float NMS_Threshold = 0.4f;
     private int bboxes = 2535; //(26*26+13*13)*3
-    private Size inputSize = new Size(192,256);
+    private Size inputSize = new Size(192,192);
 
     class Result
     {
@@ -51,7 +56,7 @@ public class YOLOv4Tiny {
 
     public YOLOv4Tiny()
     {
-        try {
+          try {
                 //載入標籤名稱
                 File file = new File(DirPath+"touhou.names");
                 InputStream is = new FileInputStream(file);
@@ -172,11 +177,11 @@ public class YOLOv4Tiny {
         //獲得輸出層的索引 從1開始
         int[] OutputLayerIDs = net.getUnconnectedOutLayers().toArray();
         //獲得所有層的名稱
-        List<String> AllLayerNames = net.getLayerNames();
+        List<String> AllNames = net.getLayerNames();
         //獲得輸出層的名稱
         List<String> OutputLayerNames = new ArrayList<>();
         for(int i = 0;i<OutputLayerIDs.length;i++) {
-            OutputLayerNames.add(AllLayerNames.get(OutputLayerIDs[i]-1));
+            OutputLayerNames.add(AllNames.get(OutputLayerIDs[i]-1));
         }
         return OutputLayerNames;
     }

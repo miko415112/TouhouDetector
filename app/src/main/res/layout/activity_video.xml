@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".VideoActivity">
 
-    <com.example.touhoudetector.mySurfaceView
-        android:id="@+id/mySurface"
+    <SurfaceView
+        android:id="@+id/VideoSurfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
