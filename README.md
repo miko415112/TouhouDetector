@@ -10,6 +10,7 @@ Install the apk and then copy YOLOv4Tiny folder(which contains cfg、weights、n
 
 ## Features
 ![This is a alt text.](demo.png)
+### demo.mp4
 [![This is a alt text.](https://img.youtube.com/vi/7TV3aCRo3LI/0.jpg)](https://www.youtube.com/watch?v=7TV3aCRo3LI)
 
 ## Reference
