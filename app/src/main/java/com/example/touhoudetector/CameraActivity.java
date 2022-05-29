@@ -91,7 +91,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         if (enterAR) {
             myUtils.CropAndSave(mBitmap,myContext);
             enterAR = false;
-            Intent i = getPackageManager().getLaunchIntentForPackage("com.miko.TouhouAR");
+            Intent i = new Intent(this,ARActivity.class);
             startActivity(i);
         }
         else {

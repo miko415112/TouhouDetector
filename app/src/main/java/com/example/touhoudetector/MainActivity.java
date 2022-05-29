@@ -125,21 +125,18 @@ public class MainActivity extends AppCompatActivity {
         Uri namesUriSrc = Uri.parse("android.resource://com.example.touhoudetector/raw/touhou_names");
         if(!namesFileDst.exists()){
             copyFile(getContentResolver(),namesUriSrc,nameUriDst);
-            Toast.makeText(this,"複製names成功",Toast.LENGTH_LONG).show();
         }
         File weightsFileDst = new File(DirPath,"touhouWeights.weights");
         Uri weightsUriDst = Uri.fromFile(weightsFileDst);
         Uri weightsUriSrc = Uri.parse("android.resource://com.example.touhoudetector/raw/yolov4_tiny_touhou_weights");
         if(!weightsFileDst.exists()){
             copyFile(getContentResolver(),weightsUriSrc,weightsUriDst);
-            Toast.makeText(this,"複製weights成功",Toast.LENGTH_LONG).show();
         }
         File cfgFileDst = new File(DirPath,"touhouCfg.cfg");
         Uri cfgUriDst = Uri.fromFile(cfgFileDst);
         Uri cfgUriSrc = Uri.parse("android.resource://com.example.touhoudetector/raw/yolov4_tiny_touhou_cfg");
         if(!cfgFileDst.exists()){
             copyFile(getContentResolver(),cfgUriSrc,cfgUriDst);
-            Toast.makeText(this,"複製cfg成功",Toast.LENGTH_LONG).show();
         }
     }
 

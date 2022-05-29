@@ -3,10 +3,9 @@ YOLOv4 Tiny 192x192 on OpenCV Android
 
 This model was trained with about 4000 images downloaded from zerochan and annotated myself.
 
-Support List : Flandre,Hakurei,Marisa,Sanae,Yuomu,Patchouli,Remilia,Yuyuko,Sakuya,Nitori
+While The AR feature was made with Vuforia Engine & Unity,and then exported the AAR to be used for this project.
 
-## Usage
-Install the apks(one is YOLOv4 , the other is UnityAR) and then copy YOLOv4Tiny folder(which contains cfg、weights、names) to /storage/emulated/0
+Support List : Flandre,Hakurei,Marisa,Sanae,Yuomu,Patchouli,Remilia,Yuyuko,Sakuya,Nitori
 
 
 ## Features
@@ -17,7 +16,7 @@ Select your photo from Goole Photos
 Open camera and start real-time touhou characters detection
 [![This is a alt text.](https://img.youtube.com/vi/7TV3aCRo3LI/0.jpg)](https://www.youtube.com/watch?v=7TV3aCRo3LI)
 ### AR demo(mp4)
-Once You press the AR Button,it'll automatically crop the screenshot (Using bounding box from YOLOv4) and set the face as an ImageTarget in AR.
+Once the AR Button is pressed ,it'll automatically crop the screenshot (Using bounding box from YOLOv4) and set the face as an ImageTarget in AR.
 [![This is a alt text.](https://img.youtube.com/vi/B1YZcwYRbbg/0.jpg)](https://www.youtube.com/watch?v=B1YZcwYRbbg)
 ## Reference
 https://github.com/hunglc007/tensorflow-yolov4-tflite

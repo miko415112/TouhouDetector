@@ -14,10 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TouhouDetector">
         <activity
+            android:name=".ARActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/NoTitle"/>
+        <activity
             android:name=".CameraActivity"
             android:exported="false"
-            android:theme="@style/NoTitle"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:theme="@style/NoTitle" />
         <activity
             android:name=".VideoActivity"
             android:exported="false"

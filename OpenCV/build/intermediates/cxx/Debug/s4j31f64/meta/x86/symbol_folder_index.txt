@@ -1,0 +1,1 @@
+C:\Users\choco\AndroidStudioProjects\TouhouDetector\OpenCV\build\intermediates\cxx\Debug\s4j31f64\obj\x86
