@@ -1,18 +1,10 @@
 package com.example.touhoudetector;
-
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.dnn.Dnn;
@@ -24,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,12 +24,12 @@ import java.util.PriorityQueue;
 public class YOLOv4Tiny {
 
     private ArrayList<String> touhou_names = new ArrayList<>();
-    private String DirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/YOLOv4Tiny/";
     private Net net;
     private float Confidence_Threshold = 0.5f;
     private float NMS_Threshold = 0.4f;
     private int bboxes = 2535; //(26*26+13*13)*3
     private Size inputSize = new Size(192,192);
+
 
     class Result
     {
@@ -57,8 +48,10 @@ public class YOLOv4Tiny {
     public YOLOv4Tiny()
     {
           try {
+                String DirPath = MainActivity.DirPath;
                 //載入標籤名稱
-                File file = new File(DirPath+"touhou.names");
+                File file = new File(DirPath+"/touhouNames.names");
+
                 InputStream is = new FileInputStream(file);
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
@@ -69,8 +62,8 @@ public class YOLOv4Tiny {
                 is.close();
 
             //載入超參數與權重
-            net = Dnn.readNetFromDarknet(DirPath+"yolov4-tiny-touhou.cfg",
-                    DirPath+"yolov4-tiny-touhou.weights");
+            net = Dnn.readNetFromDarknet(DirPath+"/touhouCfg.cfg",
+                    DirPath+"/touhouWeights.weights");
         }
         catch (Exception e) {
             Log.d("model","model was not found");
@@ -78,6 +71,7 @@ public class YOLOv4Tiny {
 
 
     }
+
 
     public List<Result> detect(Bitmap bitmap)
     {

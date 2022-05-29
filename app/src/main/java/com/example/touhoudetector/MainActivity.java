@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,6 +32,10 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,16 +46,17 @@ public class MainActivity extends AppCompatActivity {
     ImageButton video_button;
     ImageButton find_button;
     ImageButton camera_button;
-    YOLOv4Tiny detector;
 
     Context myContext = this;
-
+    public static String DirPath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         check_permissions();
+
+        init_data();
 
         if (OpenCVLoader.initDebug()) {
             Log.d("OpenCV", "OpenCV library was loaded successfully");
@@ -59,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("OpenCV", "OpenCV library failed");
         }
 
-        detector = new YOLOv4Tiny();
         mImageView = findViewById(R.id.imageView);
 
         photo_button = findViewById(R.id.imageButton_Photo);
@@ -110,6 +115,48 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+
+    public void init_data(){
+        DirPath = getExternalFilesDir("yolov4Tiny").getAbsolutePath();
+        File namesFileDst = new File(DirPath,"touhouNames.names");
+        Uri nameUriDst = Uri.fromFile(namesFileDst);
+        Uri namesUriSrc = Uri.parse("android.resource://com.example.touhoudetector/raw/touhou_names");
+        if(!namesFileDst.exists()){
+            copyFile(getContentResolver(),namesUriSrc,nameUriDst);
+            Toast.makeText(this,"複製names成功",Toast.LENGTH_LONG).show();
+        }
+        File weightsFileDst = new File(DirPath,"touhouWeights.weights");
+        Uri weightsUriDst = Uri.fromFile(weightsFileDst);
+        Uri weightsUriSrc = Uri.parse("android.resource://com.example.touhoudetector/raw/yolov4_tiny_touhou_weights");
+        if(!weightsFileDst.exists()){
+            copyFile(getContentResolver(),weightsUriSrc,weightsUriDst);
+            Toast.makeText(this,"複製weights成功",Toast.LENGTH_LONG).show();
+        }
+        File cfgFileDst = new File(DirPath,"touhouCfg.cfg");
+        Uri cfgUriDst = Uri.fromFile(cfgFileDst);
+        Uri cfgUriSrc = Uri.parse("android.resource://com.example.touhoudetector/raw/yolov4_tiny_touhou_cfg");
+        if(!cfgFileDst.exists()){
+            copyFile(getContentResolver(),cfgUriSrc,cfgUriDst);
+            Toast.makeText(this,"複製cfg成功",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void copyFile(ContentResolver r, Uri from, Uri to)  {
+        try{
+            InputStream is = r.openInputStream(from);
+            OutputStream os = r.openOutputStream(to);
+            byte[] b = new byte[4096];
+            int read;
+            while ((read = is.read(b)) != -1) {
+                os.write(b, 0, read);
+            }
+            os.flush();
+            os.close();
+            is.close();
+        }
+        catch(Exception e){};
     }
 
 
